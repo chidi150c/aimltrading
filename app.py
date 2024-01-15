@@ -7,6 +7,7 @@ app = Flask(__name__)
 
 # Load the Keras model and the label encoder
 model = load_model('my_multiclass_model.h5')
+scaler = joblib.load('scaler.pkl')
 label_encoder = joblib.load('label_encoder.pkl')
 
 @app.route('/predict', methods=['POST'])
@@ -27,8 +28,11 @@ def preprocess_data(data):
     # Convert the input data to a NumPy array
     features = np.array([list(data.values())])
 
-    # Reshape the data to match the input shape expected by the model: (None, 1, 11)
-    reshaped_features = features.reshape((features.shape[0], 1, features.shape[1]))
+    # Apply scaling using the pre-fitted scaler
+    scaled_features = scaler.transform(features)
+
+    # Reshape the data to match the input shape expected by the model
+    reshaped_features = scaled_features.reshape((1, 1, -1))
     return reshaped_features
 
 def postprocess_prediction(prediction):
