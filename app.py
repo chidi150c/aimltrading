@@ -28,12 +28,15 @@ def preprocess_data(data):
     # Convert the input data to a NumPy array
     features = np.array([list(data.values())])
 
+    # Assuming the Date field is the first field in the data
+    # Exclude the Date field
+    features_no_date = features[:, 1:]
+
     # Apply scaling using the pre-fitted scaler
-    scaled_features = scaler.transform(features)
+    scaled_features = scaler.transform(features_no_date)
 
     # Reshape the data to match the input shape expected by the model
-    # Ensure this matches the shape used during training
-    reshaped_features = scaled_features.reshape((1, 1, -1)) # Adjust as per your model's requirement
+    reshaped_features = scaled_features.reshape((1, 1, -1))  # Adjust as per your model's requirement
     return reshaped_features
 
 def postprocess_prediction(prediction):
