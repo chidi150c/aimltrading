@@ -25,18 +25,21 @@ def predict():
     return jsonify({'prediction': classified_label})
 
 def preprocess_data(data):
-    # Convert the input data to a NumPy array
+     # List of features to be dropped (identified from your training notebook)
+    dropped_features = ['RoCL8', 'OBV', 'LaggedS15EMA', 'StdDevS15','MACDSigLine','MACDLine','CurrentPrice', 'RoCS4', 'ProfitLoss','ATR',]
+   
+    # Remove the dropped features from the data
+    for feature in dropped_features:
+        data.pop(feature, None)
+
+    # Convert the remaining data to a NumPy array
     features = np.array([list(data.values())])
 
-    # Assuming the Date field is the first field in the data
-    # Exclude the Date field
-    features_no_date = features[:, 1:]
-
     # Apply scaling using the pre-fitted scaler
-    scaled_features = scaler.transform(features_no_date)
+    scaled_features = scaler.transform(features)
 
     # Reshape the data to match the input shape expected by the model
-    reshaped_features = scaled_features.reshape((1, 1, -1))  # Adjust as per your model's requirement
+    reshaped_features = scaled_features.reshape((1, 1, -1))
     return reshaped_features
 
 def postprocess_prediction(prediction):
