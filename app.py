@@ -5,7 +5,7 @@ import joblib
 
 app = Flask(__name__)
 
-# Load the Keras model and the label encoder
+# Load the Keras model, the scaler, and the label encoder
 model = load_model('my_multiclass_model.h5')
 scaler = joblib.load('scaler.pkl')
 label_encoder = joblib.load('label_encoder.pkl')
@@ -32,19 +32,19 @@ def preprocess_data(data):
     scaled_features = scaler.transform(features)
 
     # Reshape the data to match the input shape expected by the model
-    reshaped_features = scaled_features.reshape((1, 1, -1))
+    # Ensure this matches the shape used during training
+    reshaped_features = scaled_features.reshape((1, 1, -1)) # Adjust as per your model's requirement
     return reshaped_features
 
 def postprocess_prediction(prediction):
     # Get the index of the highest probability
     class_index = np.argmax(prediction, axis=-1)
 
-    # Convert index to original class label
+    # Convert index to original class label using the label encoder
     original_class = label_encoder.inverse_transform(class_index)
 
-    # Map the numeric class to your original labels (1, 0, -1)
-    class_mapping = {0: -1, 1: 0, 2: 1}
-    return class_mapping[original_class[0]]
+    # Convert NumPy int64 to Python native int for JSON serialization
+    return int(original_class[0])
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
