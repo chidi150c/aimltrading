@@ -26,7 +26,7 @@ def predict():
 
 def preprocess_data(data):
      # List of features to be dropped (identified from your training notebook)
-    dropped_features = ['RoCL8', 'OBV', 'LaggedS15EMA', 'StdDevS15','MACDSigLine','MACDLine','CurrentPrice', 'RoCS4', 'ProfitLoss','ATR',]
+    dropped_features = ['Date', 'Label', 'RoCL8', 'OBV', 'LaggedS15EMA', 'StdDevS15','MACDSigLine','MACDLine','CurrentPrice', 'RoCS4', 'ProfitLoss','ATR',]
    
     # Remove the dropped features from the data
     for feature in dropped_features:
