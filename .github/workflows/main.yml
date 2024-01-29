@@ -29,7 +29,7 @@ jobs:
           port: 22
           script: |
             set -e
-            cd /tmp/ai-trading  # Change to your app's directory on the Droplet
+            cd /path/to/your/app/directory  # Change to your app's directory on the Droplet
             docker stop flask-app || true
             docker rm flask-app || true
             docker rmi flask-app-image || true
@@ -43,13 +43,28 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           source: ./*
-          target: /tmp/ai-trading
+          target: /path/to/your/app/directory  # Change to your app's directory on the Droplet
 
-      - name: Build Flask App Docker Image
-        run: |
-          cd /tmp/ai-trading
-          docker build -t flask-app-image .
+      - name: Build Flask App Docker Image on Droplet
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DROPLET_IP }}
+          username: ${{ secrets.DROPLET_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            set -e
+            cd /path/to/your/app/directory  # Change to your app's directory on the Droplet
+            docker build -t flask-app-image .
 
-      - name: Run Flask App Container with Gunicorn
-        run: |
-          docker run -d -v shared_data:/path/in/container --network my-network -p 5000:5000 --name flask-app flask-app-image gunicorn -w 4 -b 0.0.0.0:5000 app:app
+      - name: Run Flask App Container with Gunicorn on Droplet
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DROPLET_IP }}
+          username: ${{ secrets.DROPLET_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            set -e
+            cd /path/to/your/app/directory  # Change to your app's directory on the Droplet
+            docker run -d -v shared_data:/path/in/container --network my-network -p 5000:5000 --name flask-app flask-app-image gunicorn -w 4 -b 0.0.0.0:5000 app:app
