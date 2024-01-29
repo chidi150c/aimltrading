@@ -1,5 +1,9 @@
-tensorflow == 2.14.0
-flask  # Replace with the specific version you're using
-numpy  # Include if you're using NumPy
+tensorflow==2.14.0
+flask
+numpy
 joblib
 scikit-learn
+openai
+os
+dotenv
+flask_cors
