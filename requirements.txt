@@ -4,6 +4,5 @@ numpy
 joblib
 scikit-learn
 openai
-python-dotenv
 flask-cors
 gunicorn
