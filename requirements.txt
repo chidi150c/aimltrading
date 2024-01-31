@@ -1,8 +1,6 @@
-tensorflow
 flask
-numpy
-joblib
-scikit-learn
 openai
 flask-cors
 gunicorn
+python-pptx
+

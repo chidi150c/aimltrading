@@ -13,7 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the current directory contents into the container at /app
 COPY . /app/
 
-# Create the directory /path/in/container
+# Create the directory /path/in/container for shared volume
 RUN mkdir -p /path/in/container
 
 # Make port 5000 available to the world outside this container
@@ -23,6 +23,5 @@ EXPOSE 5000
 ENV MODEL_PATH /app/my_multiclass_model.h5
 ENV ENCODER_PATH /app/label_encoder.pkl
 
-# Run app.py when the container launches
-CMD ["python", "app.py"]
-
+# Run gunicorn when the container launches
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
