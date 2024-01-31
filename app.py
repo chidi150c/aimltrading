@@ -40,7 +40,7 @@ def generate_content():
             ppt.save(ppt_file)
 
             # Return the path to the saved presentation
-            return jsonify({'message': 'Presentation created successfully', 'file': ppt_file})
+            return jsonify({'generated_content': 'Presentation created successfully', 'file': ppt_file})
 
         except Exception as e:
             return jsonify({'error': str(e)}), 500
